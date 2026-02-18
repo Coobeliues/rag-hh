@@ -40,7 +40,7 @@ class TestVacancyToDocument:
         assert "Python, Django, PostgreSQL, REST API" in doc
 
     def test_description_included(self, sample_vacancy):
-        doc = vacancy_to_document(sample_vacancy)
+        doc = vacancy_to_document(sample_vacancy)  
         assert "Python-разработчика" in doc
 
     def test_gross_salary_note(self):
@@ -69,13 +69,13 @@ class TestChunkDocuments:
         assert c["url"] == "https://hh.kz/vacancy/12345"
         assert c["salary_from"] == 500000
         assert c["salary_to"] == 800000
-        assert c["salary_currency"] == "KZT"
+        assert c["salary_currency"] == "KZT"  
         assert c["experience"] == "От 1 до 3 лет"
 
     def test_multiple_vacancies(self, sample_vacancies):
         chunks = chunk_documents(sample_vacancies)
         ids = {c["vacancy_id"] for c in chunks}
-        assert ids == {"12345", "67890", "11111"}
+        assert ids == {"12345", "67890", "11111"} 
 
     def test_long_text_splits(self):
         v = {

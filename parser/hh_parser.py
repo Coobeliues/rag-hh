@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config import VACANCIES_URL, HEADERS, DEFAULT_SEARCH_PARAMS
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -60,6 +61,7 @@ def fetch_vacancy_ids(
         **DEFAULT_SEARCH_PARAMS,
         "per_page": per_page,
     }
+
     if text:
         params["text"] = text
     if area is not None:
@@ -100,7 +102,7 @@ def fetch_vacancy_ids(
 
     return all_items
 
-
+ 
 def fetch_vacancy_detail(vacancy_id: str) -> Optional[dict]:
 
     url = f"{VACANCIES_URL}/{vacancy_id}"
@@ -116,7 +118,7 @@ def fetch_vacancy_detail(vacancy_id: str) -> Optional[dict]:
 
 def parse_vacancy(raw: dict, detail: Optional[dict] = None) -> dict:
 
-    salary = parse_salary(raw.get("salary"))
+    salary = parse_salary(raw.get("salary")) 
 
     employer =  raw.get("employer") or {}
     area = raw.get("area") or {}

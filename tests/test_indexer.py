@@ -4,7 +4,7 @@ from rag.indexer import _passes_filters
 
 
 class TestPassesFilters:
-
+ 
     def _chunk(self, **overrides):
         base = {
             "vacancy_id": "1",

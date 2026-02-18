@@ -2,7 +2,7 @@
 import sys
 import os
 import pytest
-
+ 
 # Ensure project root is importable
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -63,5 +63,5 @@ def sample_vacancies(sample_vacancy):
         "description": "Начинающий фронтенд-разработчик в дружную команду.",
     }
 
-    
+
     return [sample_vacancy, v2, v3]

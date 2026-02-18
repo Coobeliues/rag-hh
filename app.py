@@ -64,7 +64,7 @@ def _format_salary(r: dict) -> str:
     return s
 
 
-# ========== SIDEBAR ==========
+# ======= SIDEBAR =========
 st.sidebar.header("⚙️ Настройки поиска")
 
 top_k = st.sidebar.slider("Количество результатов", 3, 30, 10)
@@ -119,12 +119,12 @@ st.sidebar.metric("Городов", len(cities))
 st.sidebar.metric("Чанков в индексе", index.ntotal)
 
 
-# ========== MAIN AREA ==========
+# ======== MAIN AREA ==========
 
 # --- Tabs ---
 tab_search, tab_analytics = st.tabs(["🔍 Поиск", "📊 Аналитика"])
 
-# ========== TAB: SEARCH ==========
+# ========== TAB: SEARCH =========
 with tab_search:
     # Example queries
     examples = [
@@ -170,7 +170,7 @@ with tab_search:
                     except Exception as e:
                         st.error(f"Ошибка LLM: {e}")
 
-            # --- Results header ---
+            # --- Results header --
             # Deduplicate
             seen = set()
             unique_results = []
@@ -213,7 +213,7 @@ with tab_search:
                             st.link_button("Открыть на hh.kz", url)
 
 
-# ========== TAB: ANALYTICS ==========
+#========== TAB: ANALYTICS ========
 with tab_analytics:
     st.markdown("### 📊 Аналитика по базе вакансий")
 
@@ -265,7 +265,7 @@ with tab_analytics:
         st.info("Нет вакансий с указанной зарплатой.")
 
 
-    # Skills word cloud (text-based)
+    # Skills word cloud (text-based   
     st.markdown("---")
     st.markdown("**Топ навыков (key_skills)**")
     all_skills = []

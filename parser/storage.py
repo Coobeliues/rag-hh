@@ -1,4 +1,3 @@
-
 import json
 import os
 import pandas as pd
@@ -29,5 +28,5 @@ def load_json(filepath: str) -> list[dict]:
 
 def load_csv(filepath: str) -> pd.DataFrame:
 
-    
+
     return pd.read_csv(filepath)
