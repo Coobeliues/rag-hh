@@ -1,4 +1,3 @@
-"""Tests for rag/pipeline.py — context formatting and prompt logic."""
 
 from rag.pipeline import format_context, SYSTEM_PROMPT, RAG_PROMPT_TEMPLATE
 
@@ -53,3 +52,9 @@ class TestPromptTemplates:
         filled = RAG_PROMPT_TEMPLATE.format(context="тест контекст", question="тест вопрос")
         assert "тест контекст" in filled
         assert "тест вопрос" in filled
+
+
+
+
+
+

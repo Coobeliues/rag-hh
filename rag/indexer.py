@@ -1,6 +1,3 @@
-"""
-Build FAISS index from vacancy chunks using sentence-transformers embeddings.
-"""
 
 import json
 import os
@@ -18,14 +15,9 @@ def build_index(
     chunks: list[dict],
     model_name: str = MODEL_NAME,
     index_dir: str = INDEX_DIR,
-    batch_size: int = 64,
+    batch_size: int= 64,
 ) -> tuple:
-    """
-    Embed chunks and build FAISS index.
 
-    Returns (index, model, chunks) for querying.
-    Saves index + metadata to disk.
-    """
     os.makedirs(index_dir, exist_ok=True)
 
     print(f"Loading model: {model_name}...")
@@ -53,11 +45,12 @@ def build_index(
         json.dump({"model_name": model_name, "dim": dim, "n_chunks": len(chunks), "is_e5": is_e5}, f)
 
     print(f"Index saved to {index_dir}/")
+
+
     return index, model, chunks
 
 
 def load_index(index_dir: str = INDEX_DIR) -> tuple:
-    """Load FAISS index, model, and chunks from disk."""
     with open(os.path.join(index_dir, "config.json"), "r") as f:
         config = json.load(f)
 
@@ -69,14 +62,16 @@ def load_index(index_dir: str = INDEX_DIR) -> tuple:
     # Store e5 flag on model for search to use
     model._is_e5 = config.get("is_e5", False)
 
-    print(f"Loaded index: {index.ntotal} vectors, model={config['model_name']}")
+    print(f"Loaded index: {index.ntotal}vectors, model={config['model_name']}")
+
+
     return index, model, chunks
 
 
 def search(
     query: str,
     index: faiss.Index,
-    model: SentenceTransformer,
+    model:SentenceTransformer,
     chunks: list[dict],
     top_k: int = 10,
     filters: dict | None = None,
@@ -89,9 +84,9 @@ def search(
         index, model, chunks: From load_index()
         top_k: Number of results to return
         filters: Optional dict with keys: city, salary_min, experience
-            - city: str — filter by area name (e.g. "Алматы")
-            - salary_min: int — minimum salary_from or salary_to
-            - experience: str — filter by experience field substring
+            - city: str - filter by area name (e.g."Алматы")
+            - salary_min: int - minimum salary_from or salary_to
+            - experience: str - filter by experience field substring
 
     Returns top_k chunks with similarity scores, after applying filters.
     """
@@ -121,11 +116,11 @@ def search(
         if len(results) >= top_k:
             break
 
+
     return results
 
 
 def _passes_filters(chunk: dict, filters: dict) -> bool:
-    """Check if a chunk passes all metadata filters."""
     # City filter — exact match (case-insensitive)
     city = filters.get("city")
     if city and city.lower().strip() != (chunk.get("area") or "").lower().strip():
@@ -147,5 +142,6 @@ def _passes_filters(chunk: dict, filters: dict) -> bool:
         chunk_text = chunk.get("text") or ""
         if exp.lower() not in chunk_exp.lower() and exp.lower() not in chunk_text.lower():
             return False
+
 
     return True

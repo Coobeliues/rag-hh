@@ -1,4 +1,3 @@
-"""Tests for parser/hh_parser.py — data parsing logic (no API calls)."""
 
 from parser.hh_parser import clean_html, parse_salary, parse_vacancy
 
@@ -93,3 +92,7 @@ class TestParseVacancy:
         assert v["id"] == "1"
         assert v["name"] is None
         assert v["salary_from"] is None
+
+
+
+

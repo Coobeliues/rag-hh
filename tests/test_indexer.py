@@ -1,11 +1,9 @@
-"""Tests for rag/indexer.py — search and filter logic."""
 
 import pytest
 from rag.indexer import _passes_filters
 
 
 class TestPassesFilters:
-    """Test metadata filter logic (no FAISS needed)."""
 
     def _chunk(self, **overrides):
         base = {
@@ -95,3 +93,23 @@ class TestPassesFilters:
     def test_no_filters(self):
         c = self._chunk()
         assert _passes_filters(c, {}) is True
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+

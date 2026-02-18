@@ -1,4 +1,3 @@
-"""Shared fixtures for RAG tests."""
 
 import sys
 import os
@@ -31,7 +30,6 @@ def sample_vacancy():
 
 @pytest.fixture
 def sample_vacancies(sample_vacancy):
-    """List of vacancies for batch tests."""
     v2 = {
         "id": "67890",
         "name": "Data Scientist",
@@ -64,4 +62,6 @@ def sample_vacancies(sample_vacancy):
         "key_skills": "JavaScript, React, CSS",
         "description": "Начинающий фронтенд-разработчик в дружную команду.",
     }
+
+    
     return [sample_vacancy, v2, v3]

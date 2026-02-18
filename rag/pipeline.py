@@ -1,12 +1,8 @@
-"""
-RAG pipeline: FAISS search + LLM answer generation.
-
-Supports both OpenAI API and local Ollama models.
-"""
 
 import os
 import requests
 from rag.indexer import search
+
 
 # --- Prompt templates ---
 
@@ -27,27 +23,26 @@ RAG_PROMPT_TEMPLATE = """Вот релевантные вакансии из б�
 
 
 def format_context(results: list[dict], max_chunks: int = 5) -> str:
-    """Format search results into context string for LLM."""
     parts = []
     seen_ids = set()
 
     for r in results[:max_chunks]:
-        vid = r.get("vacancy_id")
+        vid = r.get("vacancy_id") 
         if vid in seen_ids:
             continue
         seen_ids.add(vid)
         parts.append(f"[Вакансия: {r.get('vacancy_name')} | {r.get('employer')} | {r.get('area')}]\n{r['text']}\n")
 
+
     return "\n---\n".join(parts)
 
-
+ 
 def answer_with_ollama(
-    question: str,
+    question: str, 
     context: str,
     model: str = "qwen2.5:3b",
     base_url: str = "http://localhost:11434",
 ) -> str:
-    """Generate answer using local Ollama model."""
     prompt = RAG_PROMPT_TEMPLATE.format(context=context, question=question)
 
     resp = requests.post(
@@ -64,6 +59,8 @@ def answer_with_ollama(
     )
     resp.raise_for_status()
     data = resp.json()
+
+
     try:
         return data["message"]["content"]
     except (KeyError, TypeError):
@@ -76,7 +73,6 @@ def answer_with_openai(
     model: str = "gpt-4o-mini",
     api_key: str | None = None,
 ) -> str:
-    """Generate answer using OpenAI API."""
     api_key = api_key or os.environ.get("OPENAI_API_KEY")
     if not api_key:
         raise ValueError("OPENAI_API_KEY not set")
@@ -98,6 +94,7 @@ def answer_with_openai(
     )
     resp.raise_for_status()
     data = resp.json()
+
     try:
         return data["choices"][0]["message"]["content"]
     except (KeyError, TypeError, IndexError):
@@ -133,7 +130,7 @@ def rag_query(
     results = search(question, index, embed_model, chunks, top_k=top_k)
 
     # 2. Format context
-    context = format_context(results)
+    context = format_context(results )
 
     # 3. Generate answer
     if llm_backend == "ollama":
@@ -143,6 +140,7 @@ def rag_query(
     else:
         # Fallback: just return search results without LLM
         answer = f"(LLM not configured — showing raw search results)\n\n{context}"
+
 
     # 4. Extract unique sources
     seen = set()
@@ -159,9 +157,10 @@ def rag_query(
                 "score": r.get("score"),
             })
 
+
     return {
-        "answer": answer,
+        "answer": answer, 
         "sources": sources,
-        "context": context,
+        "context":  context,
         "n_results": len(results),
     }

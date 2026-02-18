@@ -1,8 +1,6 @@
 """
-Parser for hh.ru / hh.kz vacancies using their open API.
 
 hh.ru API docs: https://github.com/hhru/api
-No auth required for vacancy search (rate limit ~5 req/sec).
 """
 
 import time
@@ -13,21 +11,21 @@ from bs4 import BeautifulSoup
 
 import sys
 import os
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config import VACANCIES_URL, HEADERS, DEFAULT_SEARCH_PARAMS
 
 logger = logging.getLogger(__name__)
 
 
 def clean_html(html_text: Optional[str]) -> str:
-    """Strip HTML tags from vacancy description."""
     if not html_text:
         return ""
     return BeautifulSoup(html_text, "html.parser").get_text(separator="\n", strip=True)
 
 
 def parse_salary(salary: Optional[dict]) -> dict:
-    """Extract salary info into flat fields."""
     if not salary:
         return {"salary_from": None, "salary_to": None, "salary_currency": None, "salary_gross": None}
     return {
@@ -55,8 +53,9 @@ def fetch_vacancy_ids(
         experience: "noExperience", "between1And3", "between3And6", "moreThan6"
         max_pages: Max pages to fetch (each page = per_page items, API limit = 2000 items total)
         per_page: Items per page (max 100)
-        search_fields: Where to search — ["name", "description", "company_name"]
+        search_fields: Where to search - ["name", "description", "company_name"]
     """
+
     params = {
         **DEFAULT_SEARCH_PARAMS,
         "per_page": per_page,
@@ -76,14 +75,14 @@ def fetch_vacancy_ids(
         params["page"] = page
 
         try:
-            resp = requests.get(VACANCIES_URL, params=params, headers=HEADERS, timeout=15)
+            resp =  requests.get(VACANCIES_URL, params=params, headers=HEADERS, timeout=15)
             resp.raise_for_status()
         except requests.RequestException as e:
             logger.error(f"Error fetching page {page}: {e}")
             break
 
-        data = resp.json()
-        items = data.get("items", [])
+        data =  resp.json()
+        items  = data.get("items", [])
         total_pages = data.get("pages", 0)
         found = data.get("found", 0)
 
@@ -103,10 +102,7 @@ def fetch_vacancy_ids(
 
 
 def fetch_vacancy_detail(vacancy_id: str) -> Optional[dict]:
-    """
-    Fetch full vacancy details by ID (includes full description, key_skills, etc.).
-    The search endpoint only returns summary — this gives the full picture.
-    """
+
     url = f"{VACANCIES_URL}/{vacancy_id}"
 
     try:
@@ -119,16 +115,10 @@ def fetch_vacancy_detail(vacancy_id: str) -> Optional[dict]:
 
 
 def parse_vacancy(raw: dict, detail: Optional[dict] = None) -> dict:
-    """
-    Parse a single vacancy into a clean flat dict.
 
-    Args:
-        raw: Short vacancy dict from search results
-        detail: Full vacancy dict from detail endpoint (optional, adds description/skills)
-    """
     salary = parse_salary(raw.get("salary"))
 
-    employer = raw.get("employer") or {}
+    employer =  raw.get("employer") or {}
     area = raw.get("area") or {}
     schedule = raw.get("schedule") or {}
     employment = raw.get("employment") or {}
@@ -136,13 +126,13 @@ def parse_vacancy(raw: dict, detail: Optional[dict] = None) -> dict:
     result = {
         "id": raw.get("id"),
         "name": raw.get("name"),
-        "url": raw.get("alternate_url"),  # human-readable URL
+        "url":raw.get("alternate_url"),  # human-readable URL
         "employer_name": employer.get("name"),
         "employer_url": employer.get("alternate_url"),
         "area": area.get("name"),
         "published_at": raw.get("published_at"),
         "schedule": schedule.get("name"),
-        "employment": employment.get("name"),
+        "employment" : employment.get("name"),
         **salary,
     }
 
@@ -169,6 +159,7 @@ def collect_vacancies(
     max_vacancies: int = 500,
     fetch_details: bool = True,
     detail_delay: float = 0.3,
+
 ) -> list[dict]:
     """
     Main function: search vacancies and optionally fetch full details for each.
@@ -208,4 +199,6 @@ def collect_vacancies(
             logger.info(f"Parsed {i + 1}/{len(raw_items)} vacancies")
 
     logger.info(f"Done! Parsed {len(parsed)} vacancies total")
+
+
     return parsed
