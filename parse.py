@@ -1,20 +1,4 @@
 #!/usr/bin/env python3
-"""
-CLI entry point for hh.kz vacancy parser.
-
-Usage:
-    # Parse Python vacancies in Almaty (default 500)
-    python parse.py --query "Python developer" --area almaty
-
-    # Parse 2000 Data Science vacancies across Kazakhstan
-    python parse.py --query "Data Science" --area kazakhstan --max 2000
-
-    # Quick parse without full descriptions (faster, less data)
-    python parse.py --query "ML engineer" --no-details
-
-    # Parse with experience filter
-    python parse.py --query "Backend" --area almaty --experience between1And3
-"""
 
 import argparse
 import logging
@@ -43,7 +27,7 @@ def main():
     args = p.parse_args()
 
     logging.basicConfig(
-        level=logging.DEBUG if args.verbose else logging.INFO,
+        level=logging.DEBUG if args.verbose else logging.INFO, 
         format="%(asctime)s [%(levelname)s] %(message)s",
         datefmt="%H:%M:%S",
     )
@@ -56,21 +40,20 @@ def main():
         if area_id is None:
             print(f"Unknown area '{args.area}'. Available: {', '.join(AREAS.keys())}")
             sys.exit(1)
-
+ 
     print(f"\n{'='*60}")
     print(f"  hh.kz Vacancy Parser")
     print(f"  Query: '{args.query}' | Area: {args.area} ({area_id})")
     print(f"  Max: {args.max} | Details: {not args.no_details}")
     print(f"{'='*60}\n")
 
-    vacancies = collect_vacancies(
+    vacancies = collect_vacancies (
         text=args.query,
         area=area_id,
         max_vacancies=args.max,
         fetch_details=not args.no_details,
         experience=args.experience,
     )
-
     if not vacancies:
         print("No vacancies found!")
         sys.exit(0)
@@ -81,6 +64,8 @@ def main():
     # Quick stats
     with_salary = sum(1 for v in vacancies if v.get("salary_from") or v.get("salary_to"))
     companies = len(set(v.get("employer_name", "") for v in vacancies))
+
+
     print(f"\n--- Stats ---")
     print(f"Total vacancies: {len(vacancies)}")
     print(f"With salary: {with_salary} ({100 * with_salary // len(vacancies)}%)")

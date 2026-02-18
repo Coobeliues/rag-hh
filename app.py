@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
-"""
-Streamlit UI for RAG vacancy search.
 
-Usage:
-    streamlit run app.py
-"""
 
 import streamlit as st
 import pandas as pd
 from collections import Counter
 from rag.indexer import load_index, search
 from rag.pipeline import rag_query
+
 
 # --- Page config ---
 st.set_page_config(
@@ -26,6 +22,8 @@ st.caption("Семантический поиск и анализ IT-вакан�
 # --- Load index (cached) ---
 @st.cache_resource
 def get_index():
+
+
     return load_index()
 
 
@@ -43,6 +41,8 @@ def get_metadata(_chunks):
     cities = sorted(set(c.get("area", "") for c in _chunks if c.get("area")))
     companies = sorted(set(c.get("employer", "") for c in _chunks if c.get("employer")))
     unique_vacancies = len(set(c["vacancy_id"] for c in _chunks))
+
+
     return cities, companies, unique_vacancies
 
 
@@ -59,6 +59,8 @@ def _format_salary(r: dict) -> str:
     s = " ".join(parts)
     if s and r.get("salary_currency"):
         s += f" {r['salary_currency']}"
+
+
     return s
 
 
@@ -203,6 +205,7 @@ with tab_search:
                     with c2:
                         st.metric("Релевантность", f"{score_pct}%")
 
+
                     with st.expander("Подробнее"):
                         st.markdown(r["text"])
                         url = r.get("url", "")
@@ -260,6 +263,7 @@ with tab_analytics:
         st.markdown(f"Вакансий с указанной зарплатой: **{len(salaries)}** из {n_vacancies} ({100 * len(salaries) // max(n_vacancies, 1)}%)")
     else:
         st.info("Нет вакансий с указанной зарплатой.")
+
 
     # Skills word cloud (text-based)
     st.markdown("---")

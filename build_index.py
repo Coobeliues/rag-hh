@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-"""
-Build FAISS index from parsed vacancies.
-
-Usage:
-    python build_index.py                           # from default merged file
-    python build_index.py --input data/custom.json  # from custom file
-"""
 
 import argparse
 import json
@@ -41,3 +33,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
