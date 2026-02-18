@@ -15,8 +15,7 @@ data/*.json
 data/*.csv
 data/index/
 
-# Claude Code
-.claude/
+
 
 # IDE
 .vscode/
